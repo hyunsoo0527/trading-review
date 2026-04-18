@@ -16,7 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const tradesList = document.getElementById('transactions-list');
     const screenshotInputs = document.querySelectorAll('.screenshot-input');
     const ocrStatusEl = document.getElementById('ocr-status');
-    
+    const themeSwitcher = document.getElementById('checkbox');
+    const body = document.body;
+
     // Form Inputs
     const typeInput = document.getElementById('transaction-type');
     const dateInput = document.getElementById('transaction-date');
@@ -64,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     .entry {
                         display: flex;
                         flex-direction: column;
-                        background-color: #fff;
+                        background-color: var(--card-background-color, #fff);
                         border-radius: 16px;
                         padding: 16px 20px;
                         box-shadow: 0 4px 12px rgba(0,0,0,0.05);
@@ -95,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     .details { flex-grow: 1; }
                     .asset-info { display: flex; align-items: center; gap: 8px; }
-                    .asset { font-weight: 700; font-size: 1.1rem; color: #1a1a1a; }
+                    .asset { font-weight: 700; font-size: 1.1rem; color: var(--text-color, #1a1a1a); }
                     .type-badge {
                         font-size: 0.75rem;
                         padding: 2px 8px;
@@ -116,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         gap: 10px;
                         margin-top: 15px;
                         padding-top: 15px;
-                        border-top: 1px solid #f0f2f5;
+                        border-top: 1px solid var(--border-color, #f0f2f5);
                         overflow-x: auto;
                     }
                     .screenshot-item {
@@ -129,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         height: 80px;
                         border-radius: 8px;
                         object-fit: cover;
-                        border: 1px solid #eee;
+                        border: 1px solid var(--border-color, #eee);
                     }
                     .screenshot-label {
                         font-size: 0.7rem;
@@ -295,14 +297,35 @@ document.addEventListener('DOMContentLoaded', () => {
             ocrStatusEl.textContent = '오류: 스크린샷 분석에 실패했습니다.';
         }
     }
+    
+    const applyTheme = (theme) => {
+        if (theme === 'dark') {
+            body.classList.add('dark-mode');
+            themeSwitcher.checked = true;
+        } else {
+            body.classList.remove('dark-mode');
+            themeSwitcher.checked = false;
+        }
+    };
 
     // --- Event Listeners ---
     form.addEventListener('submit', addTrade);
     screenshotInputs.forEach(input => {
         input.addEventListener('change', handleScreenshotUpload);
     });
+    themeSwitcher.addEventListener('change', () => {
+        if (themeSwitcher.checked) {
+            localStorage.setItem('theme', 'dark');
+            applyTheme('dark');
+        } else {
+            localStorage.setItem('theme', 'light');
+            applyTheme('light');
+        }
+    });
 
     // --- Initial Setup ---
     dateInput.valueAsDate = new Date();
+    const savedTheme = localStorage.getItem('theme') || 'light'; // Default to light
+    applyTheme(savedTheme);
     updateSummary();
 });
