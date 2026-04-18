@@ -1,6 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     // State
     let trades = [];
+    let currentScreenshots = {
+        'daily': null,
+        '1h': null,
+        '3m': null
+    };
 
     // Element References
     const totalProfitEl = document.getElementById('total-profit');
@@ -42,11 +47,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         render() {
-            const { type, date, asset, strategy, amount } = this.dataset;
+            const { type, date, asset, strategy, amount, imgDaily, img1h, img3m } = this.dataset;
             const isProfit = type === 'profit';
             const formattedAmount = `${isProfit ? '+' : '-'}${parseInt(amount).toLocaleString()}원`;
             const iconName = getAssetIcon(asset);
             const themeColor = isProfit ? 'var(--profit-color, #2ecc71)' : 'var(--loss-color, #e74c3c)';
+
+            const hasScreenshots = imgDaily || img1h || img3m;
 
             this.shadowRoot.innerHTML = `
                 <style>
@@ -56,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     .entry {
                         display: flex;
-                        align-items: center;
+                        flex-direction: column;
                         background-color: #fff;
                         border-radius: 16px;
                         padding: 16px 20px;
@@ -66,6 +73,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     .entry:hover {
                         transform: scale(1.01);
+                    }
+                    .main-info {
+                        display: flex;
+                        align-items: center;
                     }
                     .icon-container {
                         width: 48px;
@@ -100,24 +111,73 @@ document.addEventListener('DOMContentLoaded', () => {
                         font-size: 1.25rem;
                         color: ${themeColor};
                     }
+                    .screenshots-preview {
+                        display: flex;
+                        gap: 10px;
+                        margin-top: 15px;
+                        padding-top: 15px;
+                        border-top: 1px solid #f0f2f5;
+                        overflow-x: auto;
+                    }
+                    .screenshot-item {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        gap: 5px;
+                    }
+                    .screenshot-item img {
+                        height: 80px;
+                        border-radius: 8px;
+                        object-fit: cover;
+                        border: 1px solid #eee;
+                    }
+                    .screenshot-label {
+                        font-size: 0.7rem;
+                        color: #666;
+                        font-weight: 600;
+                    }
                     @keyframes fadeIn {
                         from { opacity: 0; transform: translateY(10px); }
                         to { opacity: 1; transform: translateY(0); }
                     }
                 </style>
                 <div class="entry">
-                    <div class="icon-container">
-                        <span class="icon">${iconName}</span>
-                    </div>
-                    <div class="details">
-                        <div class="asset-info">
-                            <span class="asset">${asset}</span>
-                            <span class="type-badge">${isProfit ? 'LONG' : 'SHORT'}</span>
+                    <div class="main-info">
+                        <div class="icon-container">
+                            <span class="icon">${iconName}</span>
                         </div>
-                        <div class="strategy">${strategy}</div>
-                        <div class="date">${date}</div>
+                        <div class="details">
+                            <div class="asset-info">
+                                <span class="asset">${asset}</span>
+                                <span class="type-badge">${isProfit ? 'LONG' : 'SHORT'}</span>
+                            </div>
+                            <div class="strategy">${strategy}</div>
+                            <div class="date">${date}</div>
+                        </div>
+                        <div class="amount">${formattedAmount}</div>
                     </div>
-                    <div class="amount">${formattedAmount}</div>
+                    ${hasScreenshots ? `
+                        <div class="screenshots-preview">
+                            ${imgDaily ? `
+                                <div class="screenshot-item">
+                                    <img src="${imgDaily}" alt="Daily">
+                                    <span class="screenshot-label">일봉</span>
+                                </div>
+                            ` : ''}
+                            ${img1h ? `
+                                <div class="screenshot-item">
+                                    <img src="${img1h}" alt="1H">
+                                    <span class="screenshot-label">1시간봉</span>
+                                </div>
+                            ` : ''}
+                            ${img3m ? `
+                                <div class="screenshot-item">
+                                    <img src="${img3m}" alt="3m">
+                                    <span class="screenshot-label">3분봉</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                    ` : ''}
                 </div>
             `;
         }
@@ -153,6 +213,9 @@ document.addEventListener('DOMContentLoaded', () => {
             entry.dataset.asset = t.asset;
             entry.dataset.strategy = t.strategy;
             entry.dataset.amount = t.amount;
+            if (t.screenshots.daily) entry.dataset.imgDaily = t.screenshots.daily;
+            if (t.screenshots['1h']) entry.dataset.img1h = t.screenshots['1h'];
+            if (t.screenshots['3m']) entry.dataset.img3m = t.screenshots['3m'];
             tradesList.appendChild(entry);
         });
     }
@@ -165,6 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
             asset: assetInput.value,
             strategy: strategyInput.value,
             amount: parseInt(amountInput.value, 10),
+            screenshots: { ...currentScreenshots }
         };
         trades.push(newTrade);
         trades.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -172,6 +236,12 @@ document.addEventListener('DOMContentLoaded', () => {
         renderTrades();
         updateSummary();
         form.reset();
+        
+        // Reset screenshots
+        currentScreenshots = { 'daily': null, '1h': null, '3m': null };
+        screenshotInputs.forEach(input => input.value = '');
+        ocrStatusEl.textContent = '';
+        
         dateInput.valueAsDate = new Date();
     }
 
@@ -179,12 +249,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const file = e.target.files[0];
         if (!file) return;
 
-        ocrStatusEl.textContent = '스크린샷을 분석 중입니다...';
+        const inputId = e.target.id;
+        let timeframe = 'daily';
+        if (inputId.includes('1h')) timeframe = '1h';
+        else if (inputId.includes('3m')) timeframe = '3m';
+
+        // Convert to data URL for storage/preview
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            currentScreenshots[timeframe] = event.target.result;
+        };
+        reader.readAsDataURL(file);
+
+        ocrStatusEl.textContent = `[${timeframe}] 스크린샷을 분석 중입니다...`;
         try {
             const { data: { text } } = await Tesseract.recognize(file, 'kor+eng');
-            ocrStatusEl.textContent = '분석 완료! 정보를 확인해주세요.';
+            ocrStatusEl.textContent = `[${timeframe}] 분석 완료! 정보를 확인해주세요.`;
 
-            // Try to find amounts (looks for numbers near profit/loss keywords)
+            // Try to find amounts
             const amountMatch = text.match(/(?:Profit|Loss|P\/L|수익|손실|금액)[:\s]*([+-]?[\d,]+)/i);
             if (amountMatch && amountMatch[1]) {
                 const val = amountMatch[1].replace(/,/g, '');
@@ -196,7 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // Try to find assets (common tickers)
+            // Try to find assets
             const assetMatch = text.match(/\b(BTC|ETH|NVDA|AAPL|TSLA|XAU|GOLD)\b/i);
             if (assetMatch) {
                 assetInput.value = assetMatch[0].toUpperCase();
