@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const winRateEl = document.getElementById('win-rate');
     const form = document.getElementById('transaction-form');
     const tradesList = document.getElementById('transactions-list');
-    const screenshotUploadInput = document.getElementById('screenshot-upload');
+    const screenshotInputs = document.querySelectorAll('.screenshot-input');
     const ocrStatusEl = document.getElementById('ocr-status');
     
     // Form Inputs
@@ -216,7 +216,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Event Listeners ---
     form.addEventListener('submit', addTrade);
-    screenshotUploadInput.addEventListener('change', handleScreenshotUpload);
+    screenshotInputs.forEach(input => {
+        input.addEventListener('change', handleScreenshotUpload);
+    });
 
     // --- Initial Setup ---
     dateInput.valueAsDate = new Date();

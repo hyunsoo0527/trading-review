@@ -62,8 +62,21 @@
         <section id="form-container" class="card">
             <h2>새로운 매매 기록</h2>
              <div class="form-group">
-                <label for="screenshot-upload"><span class="material-icons">photo_camera</span> 매매 스크린샷 분석</label>
-                <input type="file" id="screenshot-upload" accept="image/*">
+                <label><span class="material-icons">photo_camera</span> 매매 스크린샷 분석 (최대 3개)</label>
+                <div class="screenshot-upload-container">
+                    <div class="upload-box">
+                        <label for="screenshot-upload-1">1번</label>
+                        <input type="file" id="screenshot-upload-1" accept="image/*" class="screenshot-input">
+                    </div>
+                    <div class="upload-box">
+                        <label for="screenshot-upload-2">2번</label>
+                        <input type="file" id="screenshot-upload-2" accept="image/*" class="screenshot-input">
+                    </div>
+                    <div class="upload-box">
+                        <label for="screenshot-upload-3">3번</label>
+                        <input type="file" id="screenshot-upload-3" accept="image/*" class="screenshot-input">
+                    </div>
+                </div>
                 <div id="ocr-status"></div>
             </div>
             <form id="transaction-form">
