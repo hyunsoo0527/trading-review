@@ -1,14 +1,106 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hello World</title>
-  <link href='/style.css' rel='stylesheet'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Review Hub - 트레이딩 리뷰 허브</title>
+    <!-- Google Fonts & Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    <link rel="stylesheet" href="style.css">
+    <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js' defer></script>
 </head>
 <body>
-  <h1>Hello, world!</h1>
-  <button onclick="console.log('hello');">Press me</button>
-  <script defer type="text/javascript" src="/main.js"></script>
+    <header>
+        <h1>트레이딩 리뷰 허브</h1>
+        <p>매매 행동을 기록하고 분석하여 더 나은 트레이더가 되세요.</p>
+    </header>
+
+    <main>
+        <!-- Performance Summary Section -->
+        <section id="summary-container">
+            <div class="summary-card">
+                <div class="card-icon" style="background-color: #e3f2fd;">
+                    <span class="material-icons" style="color: #1565c0;">account_balance</span>
+                </div>
+                <div class="card-content">
+                    <h2>순손익</h2>
+                    <p id="balance">0원</p>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="card-icon" style="background-color: #e8f5e9;">
+                    <span class="material-icons" style="color: #2e7d32;">trending_up</span>
+                </div>
+                <div class="card-content">
+                    <h2>총 수익</h2>
+                    <p id="total-profit">0원</p>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="card-icon" style="background-color: #ffebee;">
+                    <span class="material-icons" style="color: #c62828;">trending_down</span>
+                </div>
+                <div class="card-content">
+                    <h2>총 손실</h2>
+                    <p id="total-loss">0원</p>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="card-icon" style="background-color: #fff3e0;">
+                    <span class="material-icons" style="color: #ef6c00;">insights</span>
+                </div>
+                <div class="card-content">
+                    <h2>승률</h2>
+                    <p id="win-rate">0%</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trade Entry Form Section -->
+        <section id="form-container" class="card">
+            <h2>새로운 매매 기록</h2>
+             <div class="form-group">
+                <label for="screenshot-upload"><span class="material-icons">photo_camera</span> 매매 스크린샷 분석</label>
+                <input type="file" id="screenshot-upload" accept="image/*">
+                <div id="ocr-status"></div>
+            </div>
+            <form id="transaction-form">
+                <div class="form-group">
+                    <label for="transaction-type">포지션</label>
+                    <select id="transaction-type">
+                        <option value="loss">숏 (Short/Sell)</option>
+                        <option value="profit">롱 (Long/Buy)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="transaction-date">매매 날짜</label>
+                    <input type="date" id="transaction-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="transaction-category">종목 (Asset)</label>
+                    <input type="text" id="transaction-category" placeholder="예: BTC, NVDA, 금" required>
+                </div>
+                <div class="form-group">
+                    <label for="transaction-description">매매 전략/메모</label>
+                    <input type="text" id="transaction-description" placeholder="예: 돌파 매매, 눌림목" required>
+                </div>
+                <div class="form-group">
+                    <label for="transaction-amount">손익 금액</label>
+                    <input type="number" id="transaction-amount" placeholder="0" required>
+                </div>
+                <button type="submit" class="glowing-button"><span class="material-icons">add</span> 기록 추가</button>
+            </form>
+        </section>
+
+        <!-- Trade List Section -->
+        <section id="transactions-container" class="card">
+            <h2>최근 매매 내역</h2>
+            <div id="transactions-list"></div>
+        </section>
+    </main>
+
+    <script src="main.js" type="module"></script>
 </body>
 </html>
