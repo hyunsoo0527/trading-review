@@ -3,123 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trading Review Hub - 트레이딩 리뷰 허브</title>
-    <!-- Google Fonts & Icons -->
+    <title>TradeAnalyze</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    
     <link rel="stylesheet" href="style.css">
-    <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js' defer></script>
 </head>
 <body>
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <span class="material-icons">analytics</span>
+                TradeAnalyze
+            </div>
+            <div class="language-selector">
+                <button class="language-button">
+                    <span class="material-icons">language</span>
+                    <span id="current-lang">KO</span>
+                    <span class="material-icons">arrow_drop_down</span>
+                </button>
+                <div class="language-dropdown">
+                    <a href="#" data-lang="ko">한국어</a>
+                    <a href="#" data-lang="en">English</a>
+                    <a href="#" data-lang="ja">日本語</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
     <header>
-        <h1>트레이딩 리뷰 허브</h1>
-        <p>매매 행동을 기록하고 분석하여 더 나은 트레이더가 되세요.</p>
-        <div class="theme-switch-wrapper">
-            <label class="theme-switch" for="checkbox">
-                <input type="checkbox" id="checkbox" />
-                <div class="slider round"></div>
-            </label>
+        <div class="header-content">
+            <h1 data-translate-key="analyze_trades_title">Analyze Your Trades<br>Like a Pro</h1>
+            <p data-translate-key="header_subtitle">Upload charts and structure your trading decisions.</p>
+        </div>
+        <div class="header-chart">
+            <img src="https://i.imgur.com/2c4h4sT.png" alt="Candlestick chart background">
         </div>
     </header>
 
     <main>
-        <!-- Performance Summary Section -->
-        <section id="summary-container">
-            <div class="summary-card">
-                <div class="card-icon" style="background-color: #e3f2fd;">
-                    <span class="material-icons" style="color: #1565c0;">account_balance</span>
+        <section id="upload-section">
+            <h2 data-translate-key="upload_charts_title">Upload Your Charts</h2>
+            <p data-translate-key="upload_charts_subtitle">Upload charts in different timeframes, to analyze your trades.</p>
+            <div class="chart-upload-container">
+                <div class="upload-box">
+                    <p data-translate-key="daily_chart">Daily Chart (일봉)</p>
+                    <div class="upload-placeholder">
+                         <img src="https://i.imgur.com/s9aVpMu.png" alt="Daily Chart Preview">
+                    </div>
                 </div>
-                <div class="card-content">
-                    <h2>순손익</h2>
-                    <p id="balance">0원</p>
+                <div class="upload-box">
+                    <p data-translate-key="hourly_chart">1H Chart (한시간봉)</p>
+                    <div class="upload-placeholder">
+                        <span class="material-icons">upload</span>
+                        <p data-translate-key="upload_placeholder_text">Drag & drop or click to upload image</p>
+                    </div>
                 </div>
-            </div>
-            <div class="summary-card">
-                <div class="card-icon" style="background-color: #e8f5e9;">
-                    <span class="material-icons" style="color: #2e7d32;">trending_up</span>
-                </div>
-                <div class="card-content">
-                    <h2>총 수익</h2>
-                    <p id="total-profit">0원</p>
-                </div>
-            </div>
-            <div class="summary-card">
-                <div class="card-icon" style="background-color: #ffebee;">
-                    <span class="material-icons" style="color: #c62828;">trending_down</span>
-                </div>
-                <div class="card-content">
-                    <h2>총 손실</h2>
-                    <p id="total-loss">0원</p>
-                </div>
-            </div>
-            <div class="summary-card">
-                <div class="card-icon" style="background-color: #fff3e0;">
-                    <span class="material-icons" style="color: #ef6c00;">insights</span>
-                </div>
-                <div class="card-content">
-                    <h2>승률</h2>
-                    <p id="win-rate">0%</p>
+                <div class="upload-box">
+                    <p data-translate-key="three_min_chart">3min Chart (3분봉)</p>
+                    <div class="upload-placeholder">
+                        <span class="material-icons">upload</span>
+                        <p data-translate-key="upload_placeholder_text">Drag & drop or click to upload image</p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Trade Entry Form Section -->
-        <section id="form-container" class="card">
-            <h2>새로운 매매 기록</h2>
-             <div class="form-group">
-                <label><span class="material-icons">photo_camera</span> 매매 스크린샷 분석 (최대 3개)</label>
-                <div class="screenshot-upload-container">
-                    <div class="upload-box">
-                        <label for="screenshot-upload-daily">일봉 (Daily)</label>
-                        <input type="file" id="screenshot-upload-daily" accept="image/*" class="screenshot-input" data-timeframe="일봉">
+        <section id="trading-info-section">
+            <h2 data-translate-key="trading_info_title">Enter Your Trading Information</h2>
+            <p data-translate-key="trading_info_subtitle">Input your trading details to calculate your position.</p>
+            <div class="info-container">
+                <div class="trading-info-form card">
+                    <div class="card-header">
+                        <h3 data-translate-key="trading_info_card_header">Trading Info</h3>
+                        <div class="card-dots">
+                            <span></span><span></span><span></span>
+                        </div>
                     </div>
-                    <div class="upload-box">
-                        <label for="screenshot-upload-1h">한시간봉 (1H)</label>
-                        <input type="file" id="screenshot-upload-1h" accept="image/*" class="screenshot-input" data-timeframe="한시간봉">
-                    </div>
-                    <div class="upload-box">
-                        <label for="screenshot-upload-3m">3분봉 (3m)</label>
-                        <input type="file" id="screenshot-upload-3m" accept="image/*" class="screenshot-input" data-timeframe="3분봉">
-                    </div>
+                    <form id="trade-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="entry-price" data-translate-key="entry_price_label">Entry Price</label>
+                                <div class="input-group">
+                                    <span>$</span>
+                                    <input type="number" id="entry-price" placeholder="56400">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="position-size" data-translate-key="position_size_label">Position Size (%)</label>
+                                 <div class="input-group">
+                                    <span>%</span>
+                                    <input type="number" id="position-size" placeholder="20">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="average-price" data-translate-key="average_price_label">Average Price</label>
+                             <div class="input-group">
+                                <span>$</span>
+                                <input type="number" id="average-price" placeholder="55800">
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div id="ocr-status"></div>
             </div>
-            <form id="transaction-form">
-                <div class="form-group">
-                    <label for="transaction-type">포지션</label>
-                    <select id="transaction-type">
-                        <option value="loss">숏 (Short/Sell)</option>
-                        <option value="profit">롱 (Long/Buy)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="transaction-date">매매 날짜</label>
-                    <input type="date" id="transaction-date" required>
-                </div>
-                <div class="form-group">
-                    <label for="transaction-category">종목 (Asset)</label>
-                    <input type="text" id="transaction-category" placeholder="예: BTC, NVDA, 금" required>
-                </div>
-                <div class="form-group">
-                    <label for="transaction-description">매매 전략/메모</label>
-                    <input type="text" id="transaction-description" placeholder="예: 돌파 매매, 눌림목" required>
-                </div>
-                <div class="form-group">
-                    <label for="transaction-amount">손익 금액</label>
-                    <input type="number" id="transaction-amount" placeholder="0" required>
-                </div>
-                <button type="submit" class="glowing-button"><span class="material-icons">add</span> 기록 추가</button>
-            </form>
         </section>
-
-        <!-- Trade List Section -->
-        <section id="transactions-container" class="card">
-            <h2>최근 매매 내역</h2>
-            <div id="transactions-list"></div>
+        <section class="start-analysis-section">
+            <button class="cta-button" data-translate-key="start_analysis_button">Start Analysis</button>
         </section>
     </main>
 
-    <script src="main.js" type="module"></script>
+    <footer>
+        <p data-translate-key="footer_terms">Terms</p>
+        <p data-translate-key="footer_privacy">Privacy</p>
+        <p data-translate-key="footer_rights">All rights reserved.</p>
+        <p>&copy; 2024 TradeAnalyze. All rights reserved.</p>
+    </footer>
+
+    <script src="main.js"></script>
 </body>
 </html>

@@ -1,331 +1,156 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // State
-    let trades = [];
-    let currentScreenshots = {
-        'daily': null,
-        '1h': null,
-        '3m': null
+    // --- DOM Element References ---
+    const entryPriceInput = document.getElementById('entry-price');
+    const positionSizeInput = document.getElementById('position-size');
+    const averagePriceInput = document.getElementById('average-price');
+    const startAnalysisBtn = document.querySelector('.start-analysis-section .cta-button');
+    const uploadPlaceholders = document.querySelectorAll('.upload-placeholder');
+    const languageDropdown = document.querySelector('.language-dropdown');
+    const currentLangElement = document.getElementById('current-lang');
+
+    // --- Translations ---
+    const translations = {
+        ko: {
+            analyze_trades_title: "프로처럼<br>당신의 트레이딩을 분석하세요",
+            header_subtitle: "차트를 업로드하고 당신의 트레이딩 결정을 체계화하세요.",
+            upload_charts_title: "차트 업로드",
+            upload_charts_subtitle: "다양한 시간대의 차트를 업로드하여 트레이딩을 분석하세요.",
+            daily_chart: "일봉 차트",
+            hourly_chart: "1시간봉 차트",
+            three_min_chart: "3분봉 차트",
+            upload_placeholder_text: "이미지를 드래그 앤 드롭하거나 클릭하여 업로드하세요",
+            trading_info_title: "트레이딩 정보 입력",
+            trading_info_subtitle: "포지션을 계산하려면 트레이딩 세부 정보를 입력하세요.",
+            trading_info_card_header: "트레이딩 정보",
+            entry_price_label: "진입 가격",
+            position_size_label: "포지션 크기 (%)",
+            average_price_label: "평균 가격",
+            start_analysis_button: "분석 시작",
+            footer_terms: "이용 약관",
+            footer_privacy: "개인정보 처리방침",
+            footer_rights: "모든 권리 보유."
+        },
+        en: {
+            analyze_trades_title: "Analyze Your Trades<br>Like a Pro",
+            header_subtitle: "Upload charts and structure your trading decisions.",
+            upload_charts_title: "Upload Your Charts",
+            upload_charts_subtitle: "Upload charts in different timeframes, to analyze your trades.",
+            daily_chart: "Daily Chart",
+            hourly_chart: "1H Chart",
+            three_min_chart: "3min Chart",
+            upload_placeholder_text: "Drag & drop or click to upload image",
+            trading_info_title: "Enter Your Trading Information",
+            trading_info_subtitle: "Input your trading details to calculate your position.",
+            trading_info_card_header: "Trading Info",
+            entry_price_label: "Entry Price",
+            position_size_label: "Position Size (%)",
+            average_price_label: "Average Price",
+            start_analysis_button: "Start Analysis",
+            footer_terms: "Terms",
+            footer_privacy: "Privacy",
+            footer_rights: "All rights reserved."
+        },
+        ja: {
+            analyze_trades_title: "プロのように<br>取引を分析しましょう",
+            header_subtitle: "チャートをアップロードし、取引の意思決定を体系化します。",
+            upload_charts_title: "チャートをアップロード",
+            upload_charts_subtitle: "さまざまなタイムフレームのチャートをアップロードして、取引を分析します。",
+            daily_chart: "日足チャート",
+            hourly_chart: "1時間足チャート",
+            three_min_chart: "3分足チャート",
+            upload_placeholder_text: "画像をドラッグ＆ドロップするか、クリックしてアップロードします",
+            trading_info_title: "取引情報を入力",
+            trading_info_subtitle: "ポジションを計算するには、取引詳細を入力してください。",
+            trading_info_card_header: "取引情報",
+            entry_price_label: "エントリー価格",
+            position_size_label: "ポジションサイズ (%)",
+            average_price_label: "平均価格",
+            start_analysis_button: "分析を開始",
+            footer_terms: "利用規約",
+            footer_privacy: "プライバシー",
+            footer_rights: "全著作権所有。"
+        }
     };
 
-    // Element References
-    const totalProfitEl = document.getElementById('total-profit');
-    const totalLossEl = document.getElementById('total-loss');
-    const netPLEl = document.getElementById('balance');
-    const winRateEl = document.getElementById('win-rate');
-    const form = document.getElementById('transaction-form');
-    const tradesList = document.getElementById('transactions-list');
-    const screenshotInputs = document.querySelectorAll('.screenshot-input');
-    const ocrStatusEl = document.getElementById('ocr-status');
-    const themeSwitcher = document.getElementById('checkbox');
-    const body = document.body;
+    // --- Language Functions ---
+    function setLanguage(lang) {
+        document.documentElement.lang = lang;
+        currentLangElement.textContent = lang.toUpperCase();
 
-    // Form Inputs
-    const typeInput = document.getElementById('transaction-type');
-    const dateInput = document.getElementById('transaction-date');
-    const assetInput = document.getElementById('transaction-category');
-    const strategyInput = document.getElementById('transaction-description');
-    const amountInput = document.getElementById('transaction-amount');
-
-    // Icon mapping for assets and strategies
-    function getAssetIcon(asset) {
-        const normalized = asset.toLowerCase();
-        if (normalized.includes('btc') || normalized.includes('crypto') || normalized.includes('비트')) return 'currency_bitcoin';
-        if (normalized.includes('eth') || normalized.includes('이더')) return 'token';
-        if (normalized.includes('주식') || normalized.includes('stock') || normalized.includes('nvda') || normalized.includes('appl')) return 'show_chart';
-        if (normalized.includes('금') || normalized.includes('gold')) return 'monetization_on';
-        if (normalized.includes('외환') || normalized.includes('fx')) return 'currency_exchange';
-        return 'account_balance_wallet'; // Default
-    }
-
-    // Web Component for a single trade entry
-    class TradeEntry extends HTMLElement {
-        constructor() {
-            super();
-            this.attachShadow({ mode: 'open' });
-        }
-
-        connectedCallback() {
-            this.render();
-        }
-
-        render() {
-            const { type, date, asset, strategy, amount, imgDaily, img1h, img3m } = this.dataset;
-            const isProfit = type === 'profit';
-            const formattedAmount = `${isProfit ? '+' : '-'}${parseInt(amount).toLocaleString()}원`;
-            const iconName = getAssetIcon(asset);
-            const themeColor = isProfit ? 'var(--profit-color, #2ecc71)' : 'var(--loss-color, #e74c3c)';
-
-            const hasScreenshots = imgDaily || img1h || img3m;
-
-            this.shadowRoot.innerHTML = `
-                <style>
-                    :host { 
-                        display: block;
-                        animation: fadeIn 0.4s ease-out;
-                    }
-                    .entry {
-                        display: flex;
-                        flex-direction: column;
-                        background-color: var(--card-background-color, #fff);
-                        border-radius: 16px;
-                        padding: 16px 20px;
-                        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-                        border-left: 6px solid ${themeColor};
-                        transition: transform 0.2s;
-                    }
-                    .entry:hover {
-                        transform: scale(1.01);
-                    }
-                    .main-info {
-                        display: flex;
-                        align-items: center;
-                    }
-                    .icon-container {
-                        width: 48px;
-                        height: 48px;
-                        border-radius: 12px;
-                        background-color: ${isProfit ? '#e8f5e9' : '#ffebee'};
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        margin-right: 20px;
-                    }
-                    .icon {
-                        font-family: 'Material Icons';
-                        font-size: 24px;
-                        color: ${themeColor};
-                    }
-                    .details { flex-grow: 1; }
-                    .asset-info { display: flex; align-items: center; gap: 8px; }
-                    .asset { font-weight: 700; font-size: 1.1rem; color: var(--text-color, #1a1a1a); }
-                    .type-badge {
-                        font-size: 0.75rem;
-                        padding: 2px 8px;
-                        border-radius: 4px;
-                        background: #f1f3f5;
-                        color: #495057;
-                        font-weight: 600;
-                    }
-                    .strategy { font-size: 0.9em; color: #666; margin-top: 2px; }
-                    .date { font-size: 0.8em; color: #999; margin-top: 4px; }
-                    .amount {
-                        font-weight: 700;
-                        font-size: 1.25rem;
-                        color: ${themeColor};
-                    }
-                    .screenshots-preview {
-                        display: flex;
-                        gap: 10px;
-                        margin-top: 15px;
-                        padding-top: 15px;
-                        border-top: 1px solid var(--border-color, #f0f2f5);
-                        overflow-x: auto;
-                    }
-                    .screenshot-item {
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                        gap: 5px;
-                    }
-                    .screenshot-item img {
-                        height: 80px;
-                        border-radius: 8px;
-                        object-fit: cover;
-                        border: 1px solid var(--border-color, #eee);
-                    }
-                    .screenshot-label {
-                        font-size: 0.7rem;
-                        color: #666;
-                        font-weight: 600;
-                    }
-                    @keyframes fadeIn {
-                        from { opacity: 0; transform: translateY(10px); }
-                        to { opacity: 1; transform: translateY(0); }
-                    }
-                </style>
-                <div class="entry">
-                    <div class="main-info">
-                        <div class="icon-container">
-                            <span class="icon">${iconName}</span>
-                        </div>
-                        <div class="details">
-                            <div class="asset-info">
-                                <span class="asset">${asset}</span>
-                                <span class="type-badge">${isProfit ? 'LONG' : 'SHORT'}</span>
-                            </div>
-                            <div class="strategy">${strategy}</div>
-                            <div class="date">${date}</div>
-                        </div>
-                        <div class="amount">${formattedAmount}</div>
-                    </div>
-                    ${hasScreenshots ? `
-                        <div class="screenshots-preview">
-                            ${imgDaily ? `
-                                <div class="screenshot-item">
-                                    <img src="${imgDaily}" alt="Daily">
-                                    <span class="screenshot-label">일봉</span>
-                                </div>
-                            ` : ''}
-                            ${img1h ? `
-                                <div class="screenshot-item">
-                                    <img src="${img1h}" alt="1H">
-                                    <span class="screenshot-label">1시간봉</span>
-                                </div>
-                            ` : ''}
-                            ${img3m ? `
-                                <div class="screenshot-item">
-                                    <img src="${img3m}" alt="3m">
-                                    <span class="screenshot-label">3분봉</span>
-                                </div>
-                            ` : ''}
-                        </div>
-                    ` : ''}
-                </div>
-            `;
-        }
-    }
-    customElements.define('trade-entry', TradeEntry);
-
-    // --- Main Functions ---
-
-    function updateSummary() {
-        const totalProfit = trades.filter(t => t.type === 'profit').reduce((sum, t) => sum + t.amount, 0);
-        const totalLoss = trades.filter(t => t.type === 'loss').reduce((sum, t) => sum + t.amount, 0);
-        const netPL = totalProfit - totalLoss;
-        
-        const totalTrades = trades.length;
-        const winningTrades = trades.filter(t => t.type === 'profit').length;
-        const winRate = totalTrades > 0 ? (winningTrades / totalTrades * 100).toFixed(1) : 0;
-
-        totalProfitEl.textContent = `${totalProfit.toLocaleString()}원`;
-        totalLossEl.textContent = `${totalLoss.toLocaleString()}원`;
-        netPLEl.textContent = `${netPL.toLocaleString()}원`;
-        winRateEl.textContent = `${winRate}%`;
-
-        // Color coding Net P/L
-        netPLEl.style.color = netPL >= 0 ? 'var(--profit-color)' : 'var(--loss-color)';
-    }
-
-    function renderTrades() {
-        tradesList.innerHTML = '';
-        trades.forEach(t => {
-            const entry = document.createElement('trade-entry');
-            entry.dataset.type = t.type;
-            entry.dataset.date = t.date;
-            entry.dataset.asset = t.asset;
-            entry.dataset.strategy = t.strategy;
-            entry.dataset.amount = t.amount;
-            if (t.screenshots.daily) entry.dataset.imgDaily = t.screenshots.daily;
-            if (t.screenshots['1h']) entry.dataset.img1h = t.screenshots['1h'];
-            if (t.screenshots['3m']) entry.dataset.img3m = t.screenshots['3m'];
-            tradesList.appendChild(entry);
+        document.querySelectorAll('[data-translate-key]').forEach(element => {
+            const key = element.getAttribute('data-translate-key');
+            if (translations[lang][key]) {
+                // Use innerHTML to render <br> tags correctly
+                element.innerHTML = translations[lang][key];
+            }
         });
     }
 
-    function addTrade(e) {
+    // --- Main Functions ---
+    function handleFileSelect(e, specificZone = null) {
         e.preventDefault();
-        const newTrade = {
-            type: typeInput.value,
-            date: dateInput.value,
-            asset: assetInput.value,
-            strategy: strategyInput.value,
-            amount: parseInt(amountInput.value, 10),
-            screenshots: { ...currentScreenshots }
-        };
-        trades.push(newTrade);
-        trades.sort((a, b) => new Date(b.date) - new Date(a.date));
-        
-        renderTrades();
-        updateSummary();
-        form.reset();
-        
-        // Reset screenshots
-        currentScreenshots = { 'daily': null, '1h': null, '3m': null };
-        screenshotInputs.forEach(input => input.value = '');
-        ocrStatusEl.textContent = '';
-        
-        dateInput.valueAsDate = new Date();
-    }
-
-    async function handleScreenshotUpload(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const inputId = e.target.id;
-        let timeframe = 'daily';
-        if (inputId.includes('1h')) timeframe = '1h';
-        else if (inputId.includes('3m')) timeframe = '3m';
-
-        // Convert to data URL for storage/preview
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            currentScreenshots[timeframe] = event.target.result;
-        };
-        reader.readAsDataURL(file);
-
-        ocrStatusEl.textContent = `[${timeframe}] 스크린샷을 분석 중입니다...`;
-        try {
-            const { data: { text } } = await Tesseract.recognize(file, 'kor+eng');
-            ocrStatusEl.textContent = `[${timeframe}] 분석 완료! 정보를 확인해주세요.`;
-
-            // Try to find amounts
-            const amountMatch = text.match(/(?:Profit|Loss|P\/L|수익|손실|금액)[:\s]*([+-]?[\d,]+)/i);
-            if (amountMatch && amountMatch[1]) {
-                const val = amountMatch[1].replace(/,/g, '');
-                amountInput.value = Math.abs(parseInt(val, 10));
-                if (val.includes('-') || text.toLowerCase().includes('loss') || text.includes('손실')) {
-                    typeInput.value = 'loss';
-                } else {
-                    typeInput.value = 'profit';
+        e.stopPropagation();
+        const dropZone = specificZone || e.currentTarget;
+        const files = e.dataTransfer ? e.dataTransfer.files : e.target.files;
+        if (files.length > 0 && dropZone) {
+            const file = files[0];
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    dropZone.innerHTML = ''; 
+                    const img = document.createElement('img');
+                    img.src = event.target.result;
+                    img.style.maxWidth = '100%';
+                    img.style.maxHeight = '100%';
+                    img.style.objectFit = 'contain';
+                    img.style.borderRadius = '4px';
+                    dropZone.appendChild(img);
                 }
+                reader.readAsDataURL(file);
             }
-
-            // Try to find assets
-            const assetMatch = text.match(/\b(BTC|ETH|NVDA|AAPL|TSLA|XAU|GOLD)\b/i);
-            if (assetMatch) {
-                assetInput.value = assetMatch[0].toUpperCase();
-            }
-
-            const dateMatch = text.match(/(\d{4}[-.년 ]+\d{2}[-.월 ]+\d{2})/);
-            if (dateMatch && dateMatch[1]) {
-                const parsedDate = new Date(dateMatch[1].replace(/[^\d-]/g, '-'));
-                dateInput.value = parsedDate.toISOString().split('T')[0];
-            }
-
-        } catch (error) {
-            console.error(error);
-            ocrStatusEl.textContent = '오류: 스크린샷 분석에 실패했습니다.';
         }
     }
-    
-    const applyTheme = (theme) => {
-        if (theme === 'dark') {
-            body.classList.add('dark-mode');
-            themeSwitcher.checked = true;
-        } else {
-            body.classList.remove('dark-mode');
-            themeSwitcher.checked = false;
-        }
-    };
 
     // --- Event Listeners ---
-    form.addEventListener('submit', addTrade);
-    screenshotInputs.forEach(input => {
-        input.addEventListener('change', handleScreenshotUpload);
+    startAnalysisBtn.addEventListener('click', () => {
+        console.log("Analysis Started:", {
+            entry: entryPriceInput.value,
+            size: positionSizeInput.value,
+            avgPrice: averagePriceInput.value
+        });
+        alert("Analysis started! Check the console for details.");
     });
-    themeSwitcher.addEventListener('change', () => {
-        if (themeSwitcher.checked) {
-            localStorage.setItem('theme', 'dark');
-            applyTheme('dark');
-        } else {
-            localStorage.setItem('theme', 'light');
-            applyTheme('light');
+
+    uploadPlaceholders.forEach(zone => {
+        zone.addEventListener('click', () => {
+            if (zone.querySelector('img')) return;
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.style.display = 'none';
+            input.addEventListener('change', (e) => handleFileSelect(e, zone));
+            document.body.appendChild(input);
+            input.click();
+            document.body.removeChild(input);
+        });
+        zone.addEventListener('dragover', (e) => { e.preventDefault(); e.stopPropagation(); zone.style.borderColor = '#6ACC75'; });
+        zone.addEventListener('dragleave', (e) => { e.preventDefault(); e.stopPropagation(); zone.style.borderColor = 'var(--border-color)'; });
+        zone.addEventListener('drop', (e) => handleFileSelect(e, zone));
+    });
+
+    languageDropdown.addEventListener('click', (e) => {
+        e.preventDefault();
+        const lang = e.target.getAttribute('data-lang');
+        if (lang) {
+            setLanguage(lang);
         }
     });
 
     // --- Initial Setup ---
-    dateInput.valueAsDate = new Date();
-    const savedTheme = localStorage.getItem('theme') || 'light'; // Default to light
-    applyTheme(savedTheme);
-    updateSummary();
+    if (entryPriceInput.placeholder) entryPriceInput.value = entryPriceInput.placeholder;
+    if (positionSizeInput.placeholder) positionSizeInput.value = positionSizeInput.placeholder;
+    if (averagePriceInput.placeholder) averagePriceInput.value = averagePriceInput.placeholder;
+    
+    // Set initial language
+    setLanguage('ko');
 });
