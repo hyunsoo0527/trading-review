@@ -52,14 +52,14 @@ document.addEventListener('DOMContentLoaded', () => {
             footer_rights: "All rights reserved."
         },
         ja: {
-            analyze_trades_title: "プロのように<br>取引を分析しましょう",
+            analyze_trades_title: "プロのように<br>取引の分析を<br>しましょう",
             header_subtitle: "チャートをアップロードし、取引の意思決定を体系化します。",
             upload_charts_title: "チャートをアップロード",
             upload_charts_subtitle: "さまざまなタイムフレームのチャートをアップロードして、取引を分析します。",
             daily_chart: "日足チャート",
             hourly_chart: "1時間足チャート",
             three_min_chart: "3分足チャート",
-            upload_placeholder_text: "画像をドラッグ＆ドロップするか、クリックしてアップロードします",
+            upload_placeholder_text: "画像をドラッグ＆ドロップするか、クリックしてアップ로드します",
             trading_info_title: "取引情報を入力",
             trading_info_subtitle: "ポジションを計算するには、取引詳細を入力してください。",
             trading_info_card_header: "取引情報",
