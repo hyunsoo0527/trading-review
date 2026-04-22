@@ -39,9 +39,10 @@ nav {
     gap: 10px;
 }
 
-.logo .material-icons {
-    color: #6ACC75;
+.logo .logo-image {
+    height: 40px;
 }
+
 
 /* --- Language Selector --- */
 .language-selector {
