@@ -113,13 +113,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Event Listeners ---
-    startAnalysisBtn.addEventListener('click', () => {
-        console.log("Analysis Started:", {
-            entry: entryPriceInput.value,
-            size: positionSizeInput.value,
-            avgPrice: averagePriceInput.value
-        });
-        alert("Analysis started! Check the console for details.");
+    startAnalysisBtn.addEventListener('click', (e) => {
+        e.preventDefault(); // Prevent default button action
+        window.location.href = 'analysis.html';
     });
 
     uploadPlaceholders.forEach(zone => {
