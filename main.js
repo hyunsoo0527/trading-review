@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const averagePriceInput = document.getElementById('average-price');
     const startAnalysisBtn = document.querySelector('.start-analysis-section .cta-button');
     const uploadPlaceholders = document.querySelectorAll('.upload-placeholder');
+    const languageButton = document.querySelector('.language-button');
     const languageDropdown = document.querySelector('.language-dropdown');
     const currentLangElement = document.getElementById('current-lang');
 
@@ -80,10 +81,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('[data-translate-key]').forEach(element => {
             const key = element.getAttribute('data-translate-key');
             if (translations[lang][key]) {
-                // Use innerHTML to render <br> tags correctly
                 element.innerHTML = translations[lang][key];
             }
         });
+        languageDropdown.style.display = 'none'; // Hide dropdown after selection
     }
 
     // --- Main Functions ---
@@ -138,11 +139,22 @@ document.addEventListener('DOMContentLoaded', () => {
         zone.addEventListener('drop', (e) => handleFileSelect(e, zone));
     });
 
+    languageButton.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevents the window click listener from firing immediately
+        languageDropdown.style.display = languageDropdown.style.display === 'block' ? 'none' : 'block';
+    });
+
     languageDropdown.addEventListener('click', (e) => {
         e.preventDefault();
         const lang = e.target.getAttribute('data-lang');
         if (lang) {
             setLanguage(lang);
+        }
+    });
+
+    window.addEventListener('click', () => {
+        if (languageDropdown.style.display === 'block') {
+            languageDropdown.style.display = 'none';
         }
     });
 

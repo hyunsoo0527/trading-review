@@ -84,10 +84,6 @@ nav {
     box-shadow: 0 8px 16px rgba(0,0,0,0.2);
 }
 
-.language-selector:hover .language-dropdown {
-    display: block;
-}
-
 .language-dropdown a {
     display: block;
     color: var(--text-muted-color);
