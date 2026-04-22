@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Translations ---
     const translations = {
         ko: {
-            analyze_trades_title: "프로처럼<br>당신의 트레이딩을 분석하세요",
+            analyze_trades_title: "프로처럼<br>당신의 트레이딩을<br>분석하세요",
             header_subtitle: "차트를 업로드하고 당신의 트레이딩 결정을 체계화하세요.",
             upload_charts_title: "차트 업로드",
             upload_charts_subtitle: "다양한 시간대의 차트를 업로드하여 트레이딩을 분석하세요.",
