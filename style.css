@@ -36,15 +36,12 @@ nav {
 .logo {
     font-size: 1.5rem;
     font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
 }
-
-.logo .logo-image {
-    height: 40px;
-}
-
 
 /* --- Language Selector --- */
 .language-selector {
