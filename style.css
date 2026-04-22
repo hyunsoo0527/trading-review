@@ -280,24 +280,26 @@ main > section > p {
     font-size: 0.9rem;
 }
 
-.input-group { position: relative; }
-.input-group span {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    left: 15px;
-    color: var(--text-muted-color);
+.input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .input-group input {
     width: 100%;
-    padding: 14px 14px 14px 35px;
+    padding: 14px;
     background-color: #0D0D0F;
     border: 1px solid var(--border-color);
     border-radius: 8px;
     color: var(--text-color);
     font-size: 1rem;
     box-sizing: border-box;
+}
+
+.position-size-group .unit {
+    padding-left: 10px;
+    color: var(--text-muted-color);
 }
 
 .start-analysis-section {
