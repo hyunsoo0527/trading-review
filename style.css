@@ -20,6 +20,8 @@ body {
 
 /* --- Navigation --- */
 nav {
+    position: relative;
+    z-index: 10;
     padding: 20px 5%;
     background-color: #0D0D0F;
     border-bottom: 1px solid var(--border-color);
