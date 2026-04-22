@@ -114,7 +114,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Event Listeners ---
     startAnalysisBtn.addEventListener('click', (e) => {
-        e.preventDefault(); // Prevent default button action
+        e.preventDefault();
+
+        // 1. Collect image data from the upload placeholders
+        const imagesData = [];
+        document.querySelectorAll('.upload-box').forEach(box => {
+            const img = box.querySelector('.upload-placeholder img');
+            if (img && img.src) {
+                imagesData.push({
+                    // The `p` tag right before the placeholder holds the title
+                    timeframe: box.querySelector('p').textContent,
+                    src: img.src // This will be a base64 data URL
+                });
+            }
+        });
+
+        if (imagesData.length === 0) {
+            alert("분석할 차트 이미지를 하나 이상 업로드해주세요.");
+            return;
+        }
+
+        // 2. Store all data in localStorage to pass to the analysis page
+        const analysisData = {
+            inputs: {
+                entry: entryPriceInput.value,
+                size: positionSizeInput.value,
+                avgPrice: averagePriceInput.value
+            },
+            images: imagesData,
+            timestamp: new Date().toISOString() // To show the analysis date
+        };
+        localStorage.setItem('tradingAnalysisData', JSON.stringify(analysisData));
+
+        // 3. Navigate to the analysis page
         window.location.href = 'analysis.html';
     });
 
