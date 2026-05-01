@@ -1,7 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     const analysisDateElem = document.getElementById('analysis-date');
+    const analysisTimeElem = document.getElementById('analysis-time');
     const aiConclusionElem = document.getElementById('ai-conclusion');
     const timeframeGridElem = document.getElementById('timeframe-grid');
+    const positionSummaryElem = document.getElementById('position-summary');
+    const recommendationListElem = document.getElementById('recommendation-list');
     const chartAnalysisContainerElem = document.getElementById('chart-analysis-container');
 
     // 1. Load data from localStorage
@@ -14,7 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const analysisData = JSON.parse(storedData);
 
     // 2. Display basic data
-    analysisDateElem.textContent = `분석 생성일: ${new Date(analysisData.timestamp).toLocaleString()}`;
+    const analysisDate = new Date(analysisData.timestamp);
+    analysisDateElem.textContent = `분석 생성일: ${analysisDate.toLocaleString()}`;
+    analysisTimeElem.textContent = `분석 시간: ${analysisDate.toLocaleString()}`;
+    displayPositionSummary();
     
     // 3. Display uploaded charts
     displayUploadedCharts();
@@ -22,18 +28,42 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. Start the REAL AI analysis process
     runAIAnalysis();
 
+    function displayPositionSummary() {
+        const inputs = analysisData.inputs || {};
+        positionSummaryElem.innerHTML = `
+            <dl class="position-list">
+                <div>
+                    <dt>진입 가격</dt>
+                    <dd>${escapeHTML(inputs.entry || '-')}</dd>
+                </div>
+                <div>
+                    <dt>포지션 크기</dt>
+                    <dd>${escapeHTML(inputs.size || '-')}</dd>
+                </div>
+                <div>
+                    <dt>평균 가격</dt>
+                    <dd>${escapeHTML(inputs.avgPrice || '-')}</dd>
+                </div>
+            </dl>
+        `;
+    }
+
     function displayUploadedCharts() {
-        let chartHTML = ''
-        analysisData.images.forEach(image => {
-            chartHTML += `
-                <div class="card chart-card">
-                    <h3>${image.timeframe}</h3>
-                    <img src="${image.src}" alt="${image.timeframe} Chart">
+        const images = analysisData.images || [];
+        if (!images.length) {
+            chartAnalysisContainerElem.innerHTML = '<div class="loading-row">표시할 차트가 없습니다.</div>';
+            return;
+        }
+
+        chartAnalysisContainerElem.innerHTML = images.map(image => `
+            <article class="chart-card">
+                <img src="${image.src}" alt="${escapeHTML(image.timeframe)} Chart">
+                <div class="chart-card-body">
+                    <h3>${escapeHTML(image.timeframe)}</h3>
                     <p class="ai-chart-analysis">AI가 이 차트를 분석하고 있습니다...</p>
                 </div>
-            `;
-        });
-        chartAnalysisContainerElem.innerHTML = chartHTML;
+            </article>
+        `).join('');
     }
 
     async function runAIAnalysis() {
@@ -59,26 +89,29 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await responseJSON.json();
 
             // Update the UI with the AI-generated analysis
-            aiConclusionElem.textContent = response.overall_conclusion;
+            const conclusion = response.overall_conclusion || '종합 결론을 받지 못했습니다.';
+            aiConclusionElem.textContent = conclusion;
+            displayRecommendations(conclusion);
 
             // Update timeframe stack
             let timeframeHTML = '';
             if (response.timeframe_analysis) {
                  response.timeframe_analysis.forEach(tf => {
                     const sentimentClass = tf.sentiment ? tf.sentiment.toLowerCase() : 'neutral';
-                    const icon = sentimentClass === 'bullish' ? 'arrow_upward' : (sentimentClass === 'bearish' ? 'arrow_downward' : 'horizontal_rule');
+                    const icon = sentimentClass === 'bullish' ? 'trending_up' : (sentimentClass === 'bearish' ? 'trending_down' : 'trending_flat');
                     timeframeHTML += `
-                        <div class="timeframe-card">
-                            <div class="timeframe-title">${tf.timeframe}</div>
-                            <div class="timeframe-content ${sentimentClass}">
-                                <span class="material-icons">${icon}</span>
-                                <span>${tf.summary}</span>
+                        <article class="timeframe-card ${sentimentClass}">
+                            <span class="material-icons">${icon}</span>
+                            <div>
+                                <p class="timeframe-title">${escapeHTML(tf.timeframe || '차트')}</p>
+                                <p class="timeframe-status">${translateSentiment(sentimentClass)}</p>
+                                <p class="timeframe-desc">${escapeHTML(tf.summary || '요약 없음')}</p>
                             </div>
-                        </div>
+                        </article>
                     `;
                 });
             }
-            timeframeGridElem.innerHTML = timeframeHTML;
+            timeframeGridElem.innerHTML = timeframeHTML || '<div class="loading-row">타임프레임 분석 결과가 없습니다.</div>';
 
             // Update individual chart analysis
             const chartCards = document.querySelectorAll('.chart-card');
@@ -104,6 +137,37 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error("AI 분석 중 오류 발생:", error);
             aiConclusionElem.textContent = "AI 분석에 실패했습니다. API 키가 정확한지, Netlify 환경변수 설정이 올바른지 확인해주세요. 문제가 지속되면 개발자 콘솔(F12)을 확인하세요.";
+            recommendationListElem.innerHTML = '<div class="loading-row">추천 행동을 생성하지 못했습니다.</div>';
         }
+    }
+
+    function displayRecommendations(conclusion) {
+        const items = conclusion
+            .split(/(?<=[.!?。]|다\.)\s+/)
+            .map(item => item.trim())
+            .filter(Boolean)
+            .slice(0, 3);
+
+        recommendationListElem.innerHTML = (items.length ? items : ['종합 결론과 차트별 분석을 함께 확인하세요.']).map(item => `
+            <div class="recommendation-item">
+                <span class="material-icons">check_circle</span>
+                <p>${escapeHTML(item)}</p>
+            </div>
+        `).join('');
+    }
+
+    function translateSentiment(sentiment) {
+        if (sentiment === 'bullish') return '상승 우세';
+        if (sentiment === 'bearish') return '하락 우세';
+        return '중립';
+    }
+
+    function escapeHTML(value) {
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
     }
 });
