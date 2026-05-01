@@ -8,162 +8,81 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <div class="analysis-container">
+<body class="analysis-page">
+    <nav>
+        <div class="nav-container">
+            <a class="logo" href="index.html">Trading Review Hub</a>
+            <a class="analysis-back-link" href="index.html">
+                <span class="material-icons">arrow_back</span>
+                다시 업로드
+            </a>
+        </div>
+    </nav>
+
+    <main class="analysis-container">
         <header class="analysis-header">
-            <div class="header-left">
-                <h2>종합 결론</h2>
-                <div class="conclusion">
-                    <div class="conclusion-icon">
-                        <span>-</span>
-                    </div>
-                    <div class="conclusion-text">
-                        <p class="conclusion-title">관망</p>
-                        <p class="conclusion-subtitle">추격매수 비추천</p>
-                        <p class="conclusion-description">상단 저항 근접, 조정 가능성 있음</p>
-                    </div>
-                </div>
+            <div class="analysis-heading">
+                <p id="analysis-date" class="analysis-kicker">분석 생성 중</p>
+                <h1>트레이딩 분석 결과</h1>
+                <p>업로드한 차트와 입력한 포지션 정보를 기준으로 종합 판단을 정리합니다.</p>
             </div>
-            <div class="header-right">
-                <h2>타임프레임 스택</h2>
-                <div class="timeframe-stack">
-                    <div class="timeframe-card">
-                        <p class="timeframe-title">일봉 (1D)</p>
-                        <p class="timeframe-status up">↗ 상승</p>
-                        <p class="timeframe-desc">강한 상승 추세</p>
-                    </div>
-                    <div class="timeframe-card">
-                        <p class="timeframe-title">1시간 (1H)</p>
-                        <p class="timeframe-status down">↘ 조정</p>
-                        <p class="timeframe-desc">상단 저항 테스트</p>
-                    </div>
-                    <div class="timeframe-card">
-                        <p class="timeframe-title">5분 (5M)</p>
-                        <p class="timeframe-status neutral">→ 횡보</p>
-                        <p class="timeframe-desc">방향성 대기</p>
-                    </div>
+            <section class="analysis-summary-card">
+                <div class="summary-icon">
+                    <span class="material-icons">analytics</span>
                 </div>
-            </div>
+                <div>
+                    <p class="summary-label">종합 결론</p>
+                    <p id="ai-conclusion" class="summary-text">AI가 차트를 분석하고 있습니다.</p>
+                </div>
+            </section>
         </header>
 
-        <main class="analysis-main-grid">
-            <section class="grid-item current-position">
-                <h2>현재 위치</h2>
-                <div class="position-box">
-                    <span class="box-label">일봉 기준 박스</span>
-                    <span class="box-range">36.00 ~ 41.60</span>
-                    <div class="progress-bar">
-                        <div class="progress" style="width: 85%;"></div>
-                        <span class="current-price" style="left: 85%;">40.50</span>
-                    </div>
-                    <div class="box-labels">
-                        <span>36.00</span>
-                        <span>41.60</span>
-                    </div>
-                    <div class="box-summary">
-                        <span>박스 상단 85%</span>
-                    </div>
+        <section class="analysis-grid">
+            <article class="analysis-panel">
+                <div class="panel-header">
+                    <h2>타임프레임 스택</h2>
+                    <span class="material-icons">stacked_line_chart</span>
                 </div>
-            </section>
+                <div id="timeframe-grid" class="timeframe-grid">
+                    <div class="loading-row">타임프레임 분석을 준비하고 있습니다.</div>
+                </div>
+            </article>
 
-            <section class="grid-item box-volatility">
-                <h2>박스 변동성</h2>
-                <div class="volatility-content">
-                    <p class="volatility-value">15.5%</p>
-                    <p class="volatility-status">활발한 구간</p>
-                    <p class="volatility-calc">(41.60 - 36.00) / 36.00</p>
+            <article class="analysis-panel">
+                <div class="panel-header">
+                    <h2>포지션 정보</h2>
+                    <span class="material-icons">request_quote</span>
                 </div>
-            </section>
+                <div id="position-summary" class="position-summary">
+                    <div class="loading-row">입력 정보를 불러오고 있습니다.</div>
+                </div>
+            </article>
 
-            <section class="grid-item scenarios">
-                <h2>시나리오 (일봉 기준)</h2>
-                <div class="scenario-card">
-                    <div class="scenario-label">A</div>
-                    <div class="scenario-details">
-                        <p class="scenario-condition">41.60 돌파 시</p>
-                        <p class="scenario-desc">상승 추세 지속, 목표 43.0 ~ 45.0</p>
-                    </div>
-                    <div class="scenario-action buy">매수 가능</div>
+            <article class="analysis-panel">
+                <div class="panel-header">
+                    <h2>추천 행동</h2>
+                    <span class="material-icons">playlist_add_check</span>
                 </div>
-                <div class="scenario-card">
-                    <div class="scenario-label">B</div>
-                    <div class="scenario-details">
-                        <p class="scenario-condition">38.00 하락 시</p>
-                        <p class="scenario-desc">조정 확대, 36.00 재테스트</p>
-                    </div>
-                    <div class="scenario-action wait">하단 대기</div>
+                <div id="recommendation-list" class="recommendation-list">
+                    <div class="loading-row">AI 결론을 기다리고 있습니다.</div>
                 </div>
-                <div class="scenario-card">
-                    <div class="scenario-label">C</div>
-                    <div class="scenario-details">
-                        <p class="scenario-condition">36.00 이탈 시</p>
-                        <p class="scenario-desc">상승 구조 붕괴, 추가 하락 가능</p>
-                    </div>
-                    <div class="scenario-action sell">손절 고려</div>
-                </div>
-            </section>
+            </article>
+        </section>
 
-            <section class="grid-item recommended-actions">
-                <h2>추천 행동</h2>
-                <div class="action-item">
-                    <span>추격매수</span>
-                    <span class="action-no">X</span>
-                </div>
-                <div class="action-item">
-                    <span>하단대기</span>
-                    <span class="action-yes">O</span>
-                </div>
-                <div class="action-item">
-                    <span>익절/분할 정리</span>
-                    <span class="action-yes">O</span>
-                </div>
-            </section>
-            
-            <section class="grid-item position-evaluation">
-                <h2>포지션 평가</h2>
-                <div class="evaluation-grid">
-                    <span>평균 단가</span>
-                    <span>39.00</span>
-                    <span>현재 가격</span>
-                    <span>40.50</span>
-                    <span>평가</span>
-                    <span class="profit">+3.85%</span>
-                </div>
-            </section>
+        <section class="analysis-panel chart-analysis-panel">
+            <div class="panel-header">
+                <h2>업로드 차트 분석</h2>
+                <span class="material-icons">candlestick_chart</span>
+            </div>
+            <div id="chart-analysis-container" class="chart-analysis-container"></div>
+        </section>
+    </main>
 
-            <section class="grid-item chart-display">
-                <h2>일봉 (1D)</h2>
-                <div class="chart-container">
-                    <img src="images/head_chart_image.png" alt="일봉 차트">
-                    <p class="chart-title">강한 상승 추세</p>
-                    <p class="chart-desc">거래량 증가로 신뢰도 높음</p>
-                </div>
-            </section>
+    <footer class="analysis-footer">
+        <p>위 분석은 참고용이며, 투자에 대한 최종 책임은 본인에게 있습니다.</p>
+        <p id="analysis-time"></p>
+    </footer>
 
-            <section class="grid-item chart-display">
-                <h2>1시간 (1H)</h2>
-                <div class="chart-container">
-                    <img src="images/head_chart_image.png" alt="1시간 차트">
-                    <p class="chart-title">상단 저항 테스트 중</p>
-                    <p class="chart-desc">조정 구간, 고점 낮아지는 구조</p>
-                </div>
-            </section>
-
-            <section class="grid-item chart-display">
-                <h2>5분 (5M)</h2>
-                <div class="chart-container">
-                    <img src="images/head_chart_image.png" alt="5분 차트">
-                    <p class="chart-title">단기 횡보 구간</p>
-                    <p class="chart-desc">방향성 대기, 돌파 확인 필요</p>
-                </div>
-            </section>
-        </main>
-
-        <footer class="analysis-footer">
-            <p>① 위 분석은 참고용이며, 투자에 대한 최종 책임은 본인에게 있습니다.</p>
-            <p id="analysis-time">분석 시간: 2025-04-16 16:49</p>
-        </footer>
-    </div>
     <script src="analysis.js"></script>
 </body>
 </html>
