@@ -152,15 +152,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     uploadPlaceholders.forEach(zone => {
         zone.addEventListener('click', () => {
-            if (zone.querySelector('img')) return;
             const input = document.createElement('input');
             input.type = 'file';
             input.accept = 'image/*';
             input.style.display = 'none';
-            input.addEventListener('change', (e) => handleFileSelect(e, zone));
+            input.addEventListener('change', (e) => {
+                handleFileSelect(e, zone);
+                input.remove();
+            }, { once: true });
             document.body.appendChild(input);
             input.click();
-            document.body.removeChild(input);
         });
         zone.addEventListener('dragover', (e) => { e.preventDefault(); e.stopPropagation(); zone.style.borderColor = '#6ACC75'; });
         zone.addEventListener('dragleave', (e) => { e.preventDefault(); e.stopPropagation(); zone.style.borderColor = 'var(--border-color)'; });
