@@ -14,25 +14,13 @@
             <div class="logo">
                 TradeAnalyze
             </div>
-            <div class="language-selector">
-                <button class="language-button">
-                    <span class="material-icons">language</span>
-                    <span id="current-lang">KO</span>
-                    <span class="material-icons">arrow_drop_down</span>
-                </button>
-                <div class="language-dropdown">
-                    <a href="#" data-lang="ko">한국어</a>
-                    <a href="#" data-lang="en">English</a>
-                    <a href="#" data-lang="ja">日本語</a>
-                </div>
-            </div>
         </div>
     </nav>
 
     <header>
         <div class="header-content">
-            <h1 data-translate-key="analyze_trades_title">Analyze Your Trades<br>Like a Pro</h1>
-            <p data-translate-key="header_subtitle">Upload charts and structure your trading decisions.</p>
+            <h1>차트 흐름을<br>간단하게<br>분석하세요</h1>
+            <p>일봉, 시간봉, 분봉 차트를 업로드하면 다음 페이지에서 흐름을 단순하게 확인합니다.</p>
         </div>
         <div class="header-chart">
             <img src="images/head_chart_image.png" alt="Candlestick chart background">
@@ -41,79 +29,42 @@
 
     <main>
         <section id="upload-section">
-            <h2 data-translate-key="upload_charts_title">Upload Your Charts</h2>
-            <p data-translate-key="upload_charts_subtitle">Upload charts in different timeframes, to analyze your trades.</p>
+            <h2>차트 업로드</h2>
+            <p>분석할 차트 이미지를 시간대별로 업로드하세요.</p>
             <div class="chart-upload-container">
                 <div class="upload-box">
-                    <p data-translate-key="daily_chart">Daily Chart (일봉)</p>
+                    <p>일봉 차트</p>
                     <div class="upload-placeholder">
-                         <img src="images/head_chart_image.png" alt="Daily Chart Preview">
+                        <span class="material-icons">upload</span>
+                        <p>이미지를 드래그하거나 클릭해서 업로드</p>
                     </div>
                 </div>
                 <div class="upload-box">
-                    <p data-translate-key="hourly_chart">1H Chart (한시간봉)</p>
+                    <p>시간봉 차트</p>
                     <div class="upload-placeholder">
                         <span class="material-icons">upload</span>
-                        <p data-translate-key="upload_placeholder_text">Drag & drop or click to upload image</p>
+                        <p>이미지를 드래그하거나 클릭해서 업로드</p>
                     </div>
                 </div>
                 <div class="upload-box">
-                    <p data-translate-key="three_min_chart">3min Chart (3분봉)</p>
+                    <p>분봉 차트</p>
                     <div class="upload-placeholder">
                         <span class="material-icons">upload</span>
-                        <p data-translate-key="upload_placeholder_text">Drag & drop or click to upload image</p>
+                        <p>이미지를 드래그하거나 클릭해서 업로드</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="trading-info-section">
-            <h2 data-translate-key="trading_info_title">Enter Your Trading Information</h2>
-            <p data-translate-key="trading_info_subtitle">Input your trading details to calculate your position.</p>
-            <div class="info-container">
-                <div class="trading-info-form card">
-                    <div class="card-header">
-                        <h3 data-translate-key="trading_info_card_header">Trading Info</h3>
-                        <div class="card-dots">
-                            <span></span><span></span><span></span>
-                        </div>
-                    </div>
-                    <form id="trade-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="entry-price" data-translate-key="entry_price_label">Entry Price</label>
-                                <div class="input-group">
-                                    <input type="number" id="entry-price" placeholder="56400">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="position-size" data-translate-key="position_size_label">Position Size</label>
-                                 <div class="input-group position-size-group">
-                                    <input type="number" id="position-size" placeholder="20">
-                                    <span class="unit">%</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="average-price" data-translate-key="average_price_label">Average Price</label>
-                             <div class="input-group">
-                                <input type="number" id="average-price" placeholder="55800">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </section>
         <section class="start-analysis-section">
-            <button class="cta-button" data-translate-key="start_analysis_button">Start Analysis</button>
+            <button class="cta-button">분석 시작</button>
         </section>
     </main>
 
     <footer>
-        <p data-translate-key="footer_terms">Terms</p>
-        <p data-translate-key="footer_privacy">Privacy</p>
-        <p data-translate-key="footer_rights">All rights reserved.</p>
-        <p>&copy; 2024 TradeAnalyze. All rights reserved.</p>
+        <p>참고용 분석</p>
+        <p>투자 조언이 아닙니다.</p>
+        <p>&copy; 2024 TradeAnalyze. 모든 권리 보유.</p>
     </footer>
 
     <script src="main.js"></script>

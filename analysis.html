@@ -3,84 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>분석 결과 - 트레이딩 리뷰 허브</title>
+    <title>TradeAnalyze</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="analysis-page">
+<body class="analysis-review-page">
     <nav>
         <div class="nav-container">
-            <a class="logo" href="index.html">TradeAnalyze</a>
-            <a class="analysis-back-link" href="index.html">
-                <span class="material-icons">arrow_back</span>
-                다시 업로드
-            </a>
+            <div class="logo">
+                TradeAnalyze
+            </div>
         </div>
     </nav>
 
-    <main class="analysis-container">
-        <section class="analysis-header" aria-labelledby="analysis-title">
-            <div class="analysis-heading">
-                <p id="analysis-date" class="analysis-kicker">분석 생성 중</p>
-                <h1 id="analysis-title">트레이딩 분석 결과</h1>
-                <p>업로드한 차트와 입력한 포지션 정보를 기준으로 종합 판단을 정리합니다.</p>
+    <header>
+        <div class="header-content">
+            <h1>차트 흐름을<br>간단하게<br>분석하세요</h1>
+            <p>업로드한 차트 이미지를 확인하고 아래에서 단순 분석 결과를 봅니다.</p>
+        </div>
+        <div class="header-chart">
+            <img src="images/head_chart_image.png" alt="Candlestick chart background">
+        </div>
+    </header>
+
+    <main>
+        <section id="upload-section">
+            <h2>업로드한 차트</h2>
+            <p>인덱스 페이지에서 업로드한 차트 이미지입니다.</p>
+            <div class="chart-upload-container">
+                <div class="upload-box">
+                    <p>일봉 차트</p>
+                    <div class="upload-placeholder" data-image-slot="0">
+                        <span class="material-icons">image</span>
+                        <p>이미지를 불러오는 중입니다</p>
+                    </div>
+                    <div class="chart-flow-result pending" data-result-slot="0">분석 대기</div>
+                </div>
+                <div class="upload-box">
+                    <p>시간봉 차트</p>
+                    <div class="upload-placeholder" data-image-slot="1">
+                        <span class="material-icons">image</span>
+                        <p>이미지를 불러오는 중입니다</p>
+                    </div>
+                    <div class="chart-flow-result pending" data-result-slot="1">분석 대기</div>
+                </div>
+                <div class="upload-box">
+                    <p>분봉 차트</p>
+                    <div class="upload-placeholder" data-image-slot="2">
+                        <span class="material-icons">image</span>
+                        <p>이미지를 불러오는 중입니다</p>
+                    </div>
+                    <div class="chart-flow-result pending" data-result-slot="2">분석 대기</div>
+                </div>
             </div>
-            <article class="analysis-summary-card">
-                <div class="summary-icon">
-                    <span class="material-icons">analytics</span>
-                </div>
-                <div>
-                    <p class="summary-label">종합 결론</p>
-                    <p id="ai-conclusion" class="summary-text">AI가 차트를 분석하고 있습니다.</p>
-                </div>
-            </article>
         </section>
 
-        <section class="analysis-grid" aria-label="분석 요약">
-            <article class="analysis-panel">
-                <div class="panel-header">
-                    <h2>타임프레임 스택</h2>
-                    <span class="material-icons">stacked_line_chart</span>
-                </div>
-                <div id="timeframe-grid" class="timeframe-grid">
-                    <div class="loading-row">타임프레임 분석을 준비하고 있습니다.</div>
-                </div>
-            </article>
+        <p id="analysis-message" class="analysis-inline-message">업로드한 이미지를 상승, 횡보, 하강 중 하나로 단순 분류합니다.</p>
 
-            <article class="analysis-panel">
-                <div class="panel-header">
-                    <h2>포지션 정보</h2>
-                    <span class="material-icons">request_quote</span>
-                </div>
-                <div id="position-summary" class="position-summary">
-                    <div class="loading-row">입력 정보를 불러오고 있습니다.</div>
-                </div>
-            </article>
-
-            <article class="analysis-panel">
-                <div class="panel-header">
-                    <h2>추천 행동</h2>
-                    <span class="material-icons">playlist_add_check</span>
-                </div>
-                <div id="recommendation-list" class="recommendation-list">
-                    <div class="loading-row">AI 결론을 기다리고 있습니다.</div>
-                </div>
-            </article>
-        </section>
-
-        <section class="analysis-panel chart-analysis-panel" aria-labelledby="chart-analysis-title">
-            <div class="panel-header">
-                <h2 id="chart-analysis-title">업로드 차트 분석</h2>
-                <span class="material-icons">candlestick_chart</span>
-            </div>
-            <div id="chart-analysis-container" class="chart-analysis-container"></div>
+        <section class="start-analysis-section">
+            <a class="cta-button" href="index.html">다시 업로드</a>
         </section>
     </main>
 
-    <footer class="analysis-footer">
-        <p>위 분석은 참고용이며, 투자에 대한 최종 책임은 본인에게 있습니다.</p>
-        <p id="analysis-time"></p>
+    <footer>
+        <p>참고용 분석</p>
+        <p>투자 조언이 아닙니다.</p>
+        <p>&copy; 2024 TradeAnalyze. 모든 권리 보유.</p>
     </footer>
 
     <script src="analysis.js"></script>
