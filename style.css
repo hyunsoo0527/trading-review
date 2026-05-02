@@ -100,29 +100,31 @@ nav {
 /* --- Header / Hero Section --- */
 header {
     position: relative;
-    padding: 80px 5% 120px;
+    padding: 34px 5% 40px;
     text-align: left;
     display: flex;
     align-items: center;
+    min-height: 180px;
 }
 
 .header-content {
-    max-width: 550px;
+    max-width: 520px;
     z-index: 2;
 }
 
 header h1 {
-    font-size: 3.8rem;
+    font-size: 2.4rem;
     font-weight: 700;
-    line-height: 1.2;
-    margin: 0 0 20px 0;
+    line-height: 1.18;
+    margin: 0 0 12px 0;
 }
 
 header p {
-    font-size: 1.2rem;
+    font-size: 1rem;
     color: var(--text-muted-color);
-    margin-bottom: 40px;
-    max-width: 450px;
+    line-height: 1.6;
+    margin: 0;
+    max-width: 520px;
 }
 
 .cta-button {
@@ -144,12 +146,12 @@ header p {
 
 .header-chart {
     position: absolute;
-    top: -50px;
+    top: -18px;
     right: 0;
-    width: 65%;
+    width: 48%;
     height: 100%;
     z-index: 1;
-    opacity: 0.6;
+    opacity: 0.38;
     mask-image: linear-gradient(to left, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
 }
 
@@ -165,7 +167,7 @@ main {
 }
 
 h2 {
-    font-size: 2.5rem;
+    font-size: 2rem;
     margin-bottom: 10px;
     text-align: center;
 }
@@ -173,15 +175,15 @@ h2 {
 main > section > p {
     color: var(--text-muted-color);
     text-align: center;
-    margin-bottom: 50px;
+    margin-bottom: 28px;
 }
 
 /* --- Upload Section --- */
 .chart-upload-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-    margin-bottom: 100px;
+    gap: 24px;
+    margin-bottom: 54px;
 }
 
 .upload-box {
@@ -662,6 +664,10 @@ footer p { margin: 0; }
 }
 
 @media (max-width: 900px) {
+    .chart-upload-container {
+        grid-template-columns: 1fr;
+    }
+
     .simple-upload-grid,
     .simple-result-list {
         grid-template-columns: 1fr;
@@ -669,6 +675,28 @@ footer p { margin: 0; }
 }
 
 @media (max-width: 640px) {
+    header {
+        padding: 26px 5% 30px;
+        min-height: 0;
+    }
+
+    header h1 {
+        font-size: 2rem;
+    }
+
+    header p {
+        font-size: 0.95rem;
+    }
+
+    .header-chart {
+        width: 70%;
+        opacity: 0.2;
+    }
+
+    h2 {
+        font-size: 1.65rem;
+    }
+
     .analysis-page .nav-container,
     .analysis-page .analysis-footer,
     .simple-action-section {

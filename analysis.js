@@ -11,8 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 slot.innerHTML = '<span class="material-icons">image_not_supported</span><p>이미지 없음</p>';
             });
             resultSlots.forEach(slot => {
-                slot.className = 'chart-flow-result pending';
-                slot.textContent = '분석 데이터 없음';
+                renderEmptyAnalysis(slot, '분석 데이터 없음');
             });
             return;
         }
@@ -21,8 +20,12 @@ document.addEventListener('DOMContentLoaded', () => {
         message.textContent = '분석 완료';
 
         // Clear all slots first
-        imageSlots.forEach(slot => slot.innerHTML = '');
-        resultSlots.forEach(slot => slot.innerHTML = '');
+        imageSlots.forEach(slot => {
+            slot.innerHTML = '<span class="material-icons">image_not_supported</span><p>이미지 없음</p>';
+        });
+        resultSlots.forEach(slot => {
+            renderEmptyAnalysis(slot, '분석 데이터 없음');
+        });
 
         results.forEach(result => {
             const { originalIndex, src, timeframe, analysis } = result;
@@ -98,6 +101,28 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="flow-row position-row">
                 <span>포지션</span>
                 <strong>${position}</strong>
+            </div>
+        `;
+    }
+
+    function renderEmptyAnalysis(slot, value) {
+        slot.className = 'chart-flow-result pending';
+        slot.innerHTML = `
+            <div class="flow-row status-row">
+                <span>상태</span>
+                <strong>${value}</strong>
+            </div>
+            <div class="flow-row">
+                <span>저항선</span>
+                <strong>${value}</strong>
+            </div>
+            <div class="flow-row">
+                <span>지지선</span>
+                <strong>${value}</strong>
+            </div>
+            <div class="flow-row position-row">
+                <span>포지션</span>
+                <strong>${value}</strong>
             </div>
         `;
     }
