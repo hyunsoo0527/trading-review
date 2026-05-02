@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const reader = new FileReader();
                 reader.onload = function(event) {
                     dropZone.innerHTML = '';
+                    dropZone.classList.add('has-uploaded-image');
                     const img = document.createElement('img');
                     img.src = event.target.result;
                     img.style.maxWidth = '100%';
