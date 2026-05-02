@@ -100,11 +100,11 @@ nav {
 /* --- Header / Hero Section --- */
 header {
     position: relative;
-    padding: 34px 5% 40px;
+    padding: 24px 5% 26px;
     text-align: left;
     display: flex;
     align-items: center;
-    min-height: 180px;
+    min-height: 112px;
 }
 
 .header-content {
@@ -113,14 +113,14 @@ header {
 }
 
 header h1 {
-    font-size: 2.4rem;
+    font-size: 2rem;
     font-weight: 700;
     line-height: 1.18;
-    margin: 0 0 12px 0;
+    margin: 0 0 8px 0;
 }
 
 header p {
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: var(--text-muted-color);
     line-height: 1.6;
     margin: 0;
@@ -146,9 +146,9 @@ header p {
 
 .header-chart {
     position: absolute;
-    top: -18px;
+    top: -10px;
     right: 0;
-    width: 48%;
+    width: 38%;
     height: 100%;
     z-index: 1;
     opacity: 0.38;
@@ -167,7 +167,7 @@ main {
 }
 
 h2 {
-    font-size: 2rem;
+    font-size: 1.8rem;
     margin-bottom: 10px;
     text-align: center;
 }
@@ -680,12 +680,12 @@ footer p { margin: 0; }
 
 @media (max-width: 640px) {
     header {
-        padding: 26px 5% 30px;
+        padding: 22px 5% 24px;
         min-height: 0;
     }
 
     header h1 {
-        font-size: 2rem;
+        font-size: 1.75rem;
     }
 
     header p {
